@@ -1,0 +1,30 @@
+# Port utilisé par le Proxy :
+# Le port indiqué ici, devra être celui qui est précisé dans votre navigateur.
+http_port 17025
+
+# nom valide de la machine
+visible_hostname broadcast-ST106
+
+# Changer la taille du cache de squid, changer la valeur 100 par ce que vous voulez  # (valeur en Mo)
+cache_dir ufs /var/spool/squid 256 16 256
+
+# les messages d'erreur a affiches a l'utilisateur
+error_directory /usr/share/squid/errors/fr
+
+################################### ACL #######################################
+acl all src all
+acl Safe_ports port 80 # Port HTTP = Port 'sure'
+acl Safe_ports port 443 # Port HTTPS = Port 'sure'
+acl Safe_ports port 21 # Port FTP = Port 'sure'
+acl deny_porn url_regex -i bbbbbbbbbbbz
+acl file urlpath_regex -i \.mp3$ \.exe$ \.mp4$
+
+# Désactiver tous les protocoles sauf les ports sures
+http_access deny !Safe_ports
+
+# Refuser les sites pornographiques
+http_access deny deny_porn
+
+# Bloquer les fichiers mp3 mp4 exe
+http_access deny file
+http_access allow all
